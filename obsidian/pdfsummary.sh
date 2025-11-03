@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="/Users/Kou.Kobayashi/Workspace/dev/pdfsummary"
+APP_DIR="${PDFSUMMARY_APP_DIR:-$(cd "$(dirname "$0")"/.. && pwd)}"
+# 旧既定パスへのフォールバック（存在確認）
+if [ ! -d "${APP_DIR}/pdfsummary" ]; then
+    if [ -d "/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/pdfsummary" ]; then
+        APP_DIR="/Users/Kou.Kobayashi/Workspace/dev/pdfsummary"
+    fi
+fi
 # PYTHON解決: 環境変数 > venv > システム
 if [ -n "${PYTHON_BIN:-}" ]; then
 	PYTHON_BIN="${PYTHON_BIN}"
