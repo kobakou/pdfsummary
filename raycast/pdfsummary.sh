@@ -1,0 +1,31 @@
+#!/bin/bash
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Summarize PDF to Markdown
+# @raycast.mode fullOutput
+
+# Optional parameters:
+# @raycast.icon 📄
+# @raycast.packageName PDF Tools
+# @raycast.argument1 { "type": "file", "dataType": "public.pdf", "placeholder": "PDF file" }
+# @raycast.argument2 { "type": "text", "placeholder": "pages (e.g. 1,3-5)", "optional": true }
+
+set -euo pipefail
+
+PDF_PATH="$1"
+PAGES="${2-}"
+
+SCRIPT="/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/pdfsummary.py"
+
+if [[ ! -f "$SCRIPT" ]]; then
+  echo "script not found: $SCRIPT" >&2
+  exit 1
+fi
+
+if [[ -z "$PAGES" ]]; then
+  /usr/bin/env python3 "$SCRIPT" "$PDF_PATH" --stdout --language 日本語
+else
+  /usr/bin/env python3 "$SCRIPT" "$PDF_PATH" --pages "$PAGES" --stdout --language 日本語
+fi
+
+
