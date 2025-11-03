@@ -58,17 +58,19 @@ PDFSUMMARY_SYSTEM_PROMPT="あなたは日本語で簡潔にMarkdown要約を生�
 
 - 単一パス要約テンプレ（`templates/summary.tpl`）
 ```text
-以下はPDF全体のテキストです。重要情報を落とさず、日本語で簡潔に最終Markdown要約を出力してください。
+以下はPDF全体のテキストです。プレゼンテーションのPDFであるためにスライドのヘッダやフッダ情報が冗長な可能性があります。重要情報を落とさず、日本語で簡潔に最終Markdown要約を出力してください。後で検索等で利用しやすいように、重要なキーワードを含めるようにしてください。
 - 見出し: # 要約
 - 次に ## 重要ポイント（最大{max_bullets}点、箇条書き）
-- 可能なら ## 次のアクション と ## リスク/注意点 も簡潔に箇条書き
 - 数値/日付/指標は明示。冗長表現は避ける。
+- 出力は必ず日本語。英語は禁止。
+- 最後に ## 関連リソース（最大{max_bullets}点、箇条書き）のURLを列挙
 
 [PDF全文]
 {text}
 ```
 
 > 既存の `chunk.tpl` / `merge.tpl` は互換のため残していますが、既定は単一パスです。
+> 内蔵のデフォルトプロンプトでは「次のアクション」「リスク/注意点」を任意で出力する指示が含まれます。テンプレートを使う場合は必要に応じて追記してください。
 
 ## Raycast から実行
 
@@ -118,3 +120,6 @@ export PDFSUMMARY_LLM_CMD="your_cursor_cli_command"
 
 - 既定はPDF全文の単一パス要約です。非常に大きなPDFではトークン制限に注意してください。
 - ネットワーク不要なローカル推論を使う場合は `ollama` 推奨。
+-
+- 旧スクリプト: `raycast/pdfsummary.py` および `raycast/pdfsummary.sh` は旧方式です。Raycastからは `raycast/pdfsummary-raycast.sh` の利用を推奨します。
+- ObsidianのJS版: `obsidian/pdfsummary.js` はObsidian APIから直接ノートを作成するための簡易スクリプトです（Terminalプラグイン不要の運用に利用可能）。
