@@ -1,7 +1,10 @@
 # pdfsummary
 
 Mac上でPDFからテキストを抽出し、LLMで要約してMarkdownを出力するCLI。
-Raycast Script Commandからの実行を想定。
+Raycast Script Commandや、Shell Script等でObisidianからの実行を想定。
+
+> [!IMPORTANT]
+> LLMバックエンドのについては、ローカルのollama以外は未確認です。
 
 ## セットアップ
 
