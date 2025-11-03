@@ -47,7 +47,14 @@ module.exports = async (app) => {
 	}
 
 	// 2) Python CLI 実行（venv優先）
-	const APP_DIR = '/Users/Kou.Kobayashi/Workspace/dev/pdfsummary';
+	const DEFAULT_APP_DIR = (typeof __dirname === 'string') ? path.resolve(__dirname, '..') : process.cwd();
+	let APP_DIR = process.env.PDFSUMMARY_APP_DIR || DEFAULT_APP_DIR;
+	if (!fs.existsSync(path.join(APP_DIR, 'pdfsummary', 'cli.py'))) {
+		const fallback = '/Users/Kou.Kobayashi/Workspace/dev/pdfsummary';
+		if (fs.existsSync(path.join(fallback, 'pdfsummary', 'cli.py'))) {
+			APP_DIR = fallback;
+		}
+	}
 	const venvPython = path.join(APP_DIR, '.venv', 'bin', 'python3');
 	const PYTHON = process.env.PYTHON_BIN || (fs.existsSync(venvPython) ? venvPython : 'python3');
 	const cliPath = path.join(APP_DIR, 'pdfsummary', 'cli.py');

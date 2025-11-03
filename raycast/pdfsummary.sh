@@ -15,7 +15,13 @@ set -euo pipefail
 PDF_PATH="$1"
 PAGES="${2-}"
 
-SCRIPT="/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/pdfsummary.py"
+ROOT_DIR="${PDFSUMMARY_APP_DIR:-$(cd "$(dirname "$0")"/.. && pwd)}"
+if [[ ! -d "$ROOT_DIR/pdfsummary" ]]; then
+  if [[ -d "/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/pdfsummary" ]]; then
+    ROOT_DIR="/Users/Kou.Kobayashi/Workspace/dev/pdfsummary"
+  fi
+fi
+SCRIPT="${PDFSUMMARY_SCRIPT:-"$ROOT_DIR/pdfsummary.py"}"
 
 if [[ ! -f "$SCRIPT" ]]; then
   echo "script not found: $SCRIPT" >&2

@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 PYTHON_BIN="${PYTHON_BIN:-python3}"
-SCRIPT_DIR="/Users/Kou.Kobayashi/Workspace/dev/pdfsummary"
-exec "${PYTHON_BIN}" "${SCRIPT_DIR}/pdfsummary/cli.py" "$@"
+APP_DIR="${PDFSUMMARY_APP_DIR:-$(cd "$(dirname "$0")"/.. && pwd)}"
+# 旧既定パスへのフォールバック（存在確認）
+if [ ! -d "${APP_DIR}/pdfsummary" ]; then
+    if [ -d "/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/pdfsummary" ]; then
+        APP_DIR="/Users/Kou.Kobayashi/Workspace/dev/pdfsummary"
+    fi
+fi
+exec "${PYTHON_BIN}" "${APP_DIR}/pdfsummary/cli.py" "$@"

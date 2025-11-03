@@ -9,7 +9,10 @@ Raycast Script Commandや、Shell Script等でObisidianからの実行を想定�
 ## セットアップ
 
 ```bash
-cd /Users/Kou.Kobayashi/Workspace/dev/pdfsummary
+# リポジトリルートへ移動
+cd /path/to/pdfsummary
+# 任意: 以後のスクリプトで参照されるアプリディレクトリ
+export PDFSUMMARY_APP_DIR="$(pwd)"
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -50,7 +53,7 @@ python3 pdfsummary/cli.py sample.pdf
 
 ```bash
 PDFSUMMARY_MAX_BULLETS=10
-PDFSUMMARY_SUMMARY_PROMPT_FILE=/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/templates/summary.tpl
+PDFSUMMARY_SUMMARY_PROMPT_FILE=${PDFSUMMARY_APP_DIR}/templates/summary.tpl
 PDFSUMMARY_SYSTEM_PROMPT="あなたは日本語で簡潔にMarkdown要約を生成するアシスタントです。"
 ```
 
@@ -78,7 +81,7 @@ PDFSUMMARY_SYSTEM_PROMPT="あなたは日本語で簡潔にMarkdown要約を生�
 
 1. スクリプトに実行権限を付与
    ```bash
-   chmod +x /Users/Kou.Kobayashi/Workspace/dev/pdfsummary/raycast/pdfsummary-raycast.sh
+   chmod +x ${PDFSUMMARY_APP_DIR}/raycast/pdfsummary-raycast.sh
    ```
 2. Raycast の「Script Commands」で当該スクリプトを指定
 3. 引数にPDFファイルを指定して実行
@@ -95,11 +98,11 @@ PDFSUMMARY_LLM_CMD=your_cursor_cli_command
 
 - Terminalプラグインを開き、Vaultルートで次を実行:
 ```bash
-chmod +x /Users/Kou.Kobayashi/Workspace/dev/pdfsummary/obsidian/pdfsummary.sh
-/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/obsidian/pdfsummary.sh \
+chmod +x ${PDFSUMMARY_APP_DIR}/obsidian/pdfsummary.sh
+${PDFSUMMARY_APP_DIR}/obsidian/pdfsummary.sh \
 	"/absolute/path/to/input.pdf"
 # または クリップボードにPDFパス/file://URLをコピーしてから:
-/Users/Kou.Kobayashi/Workspace/dev/pdfsummary/obsidian/pdfsummary.sh
+${PDFSUMMARY_APP_DIR}/obsidian/pdfsummary.sh
 ```
 - 生成先: Vaultの `clips/` に `<PDF名>-YYYY-MM-DD.md`
 - 生成Markdownはクリップボードにもコピーされます
@@ -123,3 +126,15 @@ export PDFSUMMARY_LLM_CMD="your_cursor_cli_command"
 -
 - 旧スクリプト: `raycast/pdfsummary.py` および `raycast/pdfsummary.sh` は旧方式です。Raycastからは `raycast/pdfsummary-raycast.sh` の利用を推奨します。
 - ObsidianのJS版: `obsidian/pdfsummary.js` はObsidian APIから直接ノートを作成するための簡易スクリプトです（Terminalプラグイン不要の運用に利用可能）。
+
+### パス設定の外部化について
+
+- すべてのスクリプトは `${PDFSUMMARY_APP_DIR}` を参照するように変更済みです。
+- 未設定の場合は、各スクリプトの位置からリポジトリルートを自動推定します（`bin/`/`obsidian/`/`raycast/` → `..`）。
+- 明示的に指定したい場合は、事前に次を設定してください:
+
+```bash
+export PDFSUMMARY_APP_DIR=/absolute/path/to/pdfsummary
+```
+
+- 互換のため、上記の自動検出で判別できない場合は、旧固定パス `/Users/Kou.Kobayashi/Workspace/dev/pdfsummary` を最終フォールバックします（存在する場合のみ有効）。
